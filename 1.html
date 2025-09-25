@@ -2,345 +2,65 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" id="mixia_vpid">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TXT/M3U 转换工具</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* 样式保持不变，与之前相同 */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: #333;
-            min-height: 100vh;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            padding: 24px;
-            margin-top: 16px;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-        
-        h1 {
-            color: #2c3e50;
-            margin-bottom: 12px;
-            font-size: 2.2rem;
-        }
-        
-        .description {
-            color: #7f8c8d;
-            font-size: 1.1rem;
-            margin-bottom: 16px;
-        }
-        
-        .panels-container {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .panel {
-            flex: 1;
-            min-width: 280px;
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid #e9ecef;
-        }
-        
-        .panel-title {
-            font-size: 1.2rem;
-            color: #2c3e50;
-            display: flex;
-            align-items: center;
-        }
-        
-        .format-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-left: 10px;
-        }
-        
-        .badge-txt {
-            background: #2ecc71;
-            color: white;
-        }
-        
-        .badge-m3u {
-            background: #9b59b6;
-            color: white;
-        }
-        
-        textarea {
-            width: 100%;
-            flex: 1;
-            min-height: 280px;
-            padding: 16px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-family: monospace;
-            font-size: 14px;
-            resize: vertical;
-            line-height: 1.5;
-        }
-        
-        textarea:focus {
-            outline: none;
-            border-color: #3498db;
-        }
-        
-        .upload-area {
-            border: 3px dashed #3498db;
-            border-radius: 12px;
-            padding: 24px 16px;
-            text-align: center;
-            margin-bottom: 20px;
-            transition: all 0.3s;
-            background-color: #f8f9fa;
-        }
-        
-        .upload-area:hover, .upload-area.dragover {
-            background-color: #e8f4ff;
-            border-color: #2980b9;
-        }
-        
-        .upload-icon {
-            font-size: 42px;
-            color: #3498db;
-            margin-bottom: 12px;
-        }
-        
-        .upload-text {
-            margin-bottom: 16px;
-            font-size: 1rem;
-            color: #34495e;
-        }
-        
-        .btn {
-            padding: 10px 20px;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.95rem;
-            font-weight: 600;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 44px; /* 触摸友好 */
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .btn i {
-            margin-right: 8px;
-        }
-        
-        .btn-primary {
-            background: #3498db;
-        }
-        
-        .btn-primary:hover {
-            background: #2980b9;
-        }
-        
-        .btn-success {
-            background: #2ecc71;
-        }
-        
-        .btn-success:hover {
-            background: #27ae60;
-        }
-        
-        .btn-danger {
-            background: #e74c3c;
-        }
-        
-        .btn-danger:hover {
-            background: #c0392b;
-        }
-        
-        .file-input {
-            display: none;
-        }
-        
-        footer {
-            margin-top: 24px;
-            text-align: center;
-            color: white;
-            font-size: 0.9rem;
-        }
-        
-        /* 转换按钮居中 */
-        .convert-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 20px 0;
-        }
-        
-        /* 按钮组样式 */
-        .button-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 16px;
-        }
-        
-        /* 小屏幕适配 */
-        @media (max-width: 768px) {
-            .container {
-                padding: 16px;
-                border-radius: 12px;
-            }
-            
-            h1 {
-                font-size: 1.8rem;
-            }
-            
-            .description {
-                font-size: 1rem;
-            }
-            
-            .panels-container {
-                flex-direction: column;
-            }
-            
-            .panel {
-                min-width: 100%;
-            }
-            
-            .btn {
-                width: 100%;
-            }
-            
-            textarea {
-                min-height: 220px;
-            }
-            
-            .button-group {
-                flex-direction: column;
-            }
-        }
-        
-        /* 超小屏幕适配 */
-        @media (max-width: 480px) {
-            body {
-                padding: 12px;
-            }
-            
-            .container {
-                padding: 12px;
-            }
-            
-            h1 {
-                font-size: 1.6rem;
-            }
-            
-            .panel {
-                padding: 16px;
-            }
-            
-            .upload-area {
-                padding: 16px 12px;
-            }
-            
-            .upload-icon {
-                font-size: 36px;
-            }
-            
-            .upload-text {
-                font-size: 0.95rem;
-            }
-            
-            .btn {
-                padding: 8px 16px;
-                font-size: 0.9rem;
-            }
-        }
-        
-        /* 动画效果 */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .panel, .upload-area, .convert-container {
-            animation: fadeIn 0.5s ease-out;
-        }
-        
-        /* 滚动条样式 */
-        textarea::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        textarea::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 4px;
-        }
-        
-        textarea::-webkit-scrollbar-thumb {
-            background: #c4c4c4;
-            border-radius: 4px;
-        }
-        
-        textarea::-webkit-scrollbar-thumb:hover {
-            background: #a0a0a0;
-        }
+        *{box-sizing:border-box}
+        body{margin:0;font:14px/1.5 "Microsoft YaHei", sans-serif;background:#f9fafb;color:#374151;display:flex;flex-direction:column;min-height:100vh}
+        .top-nav,.footer-links{background:#4285f4;text-align:center;padding:10px 0;font-size:0}
+        .top-nav a,.footer-links a{color:#fff;font-size:13px;margin:0 8px;padding:4px 6px;text-decoration:none}
+        .top-nav a:hover,.footer-links a:hover{text-decoration:underline}
+        .container{width:100%;max-width:1200px;margin:0 auto 24px;padding:16px;background:#fff;border-radius:0 0 8px 8px;box-shadow:0 0 6px rgba(0,0,0,.04);flex:1}
+        h1{font-size:18px;text-align:center;margin:0 0 16px}
+        .panels-container{display:flex;gap:20px;flex-wrap:wrap}
+        .panel{flex:1;min-width:280px;background:#f8f9fa;border-radius:8px;padding:16px;box-shadow:0 2px 4px rgba(0,0,0,.05)}
+        .panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #e5e7eb}
+        .panel-title{font-size:14px;color:#374151;font-weight:600}
+        .format-badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;margin-left:8px}
+        .badge-txt{background:#10b981;color:white}
+        .badge-m3u{background:#8b5cf6;color:white}
+        textarea{width:100%;min-height:280px;padding:10px 12px;border:1px solid #d1d5db;border-radius:6px;font-family:monospace;font-size:14px;resize:vertical;line-height:1.5}
+        textarea:focus{outline:none;border-color:#4285f4;box-shadow:0 0 0 2px rgba(66,133,244,.2)}
+        .upload-area{border:2px dashed #d1d5db;border-radius:6px;padding:20px;text-align:center;margin-bottom:16px;transition:all .3s;background:#f9fafb}
+        .upload-area:hover,.upload-area.dragover{border-color:#4285f4;background:#f0f7ff}
+        .upload-icon{font-size:32px;margin-bottom:8px}
+        .upload-text{margin-bottom:12px;font-size:14px;color:#6b7280}
+        .btn{padding:8px 16px;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-weight:600;transition:all .3s;display:inline-flex;align-items:center;justify-content:center;margin:4px}
+        .btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.15)}
+        .btn-primary{background:#4285f4}
+        .btn-primary:hover{background:#3367d6}
+        .btn-success{background:#10b981}
+        .btn-success:hover{background:#059669}
+        .btn-danger{background:#ef476f}
+        .btn-danger:hover{background:#d90429}
+        .convert-container{display:flex;justify-content:center;align-items:center;margin:16px 0}
+        .button-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+        .file-input{display:none}
+        .copyright{background:#f8fafc;font-size:12px;color:#64748b;text-align:center;padding:10px 0;border-top:1px solid #f0f0f0}
+        @media(max-width:768px){.panels-container{flex-direction:column}.panel{min-width:100%}}
     </style>
 </head>
 <body>
+    <!-- 顶部导航 -->
+    <div class="top-nav">
+        <a href="./index.html">我的主页</a>
+        <a href="./1.html">格式转换</a>
+        <a href="./2.html">加密工具</a>
+        <a href="./pl.html">批量工具</a>
+    </div>
+
     <div class="container">
-        <header>
-            <h1>TXT/M3U 转换工具</h1>
-            <p class="description">上传TXT或M3U文件，工具将自动识别格式并转换为另一种格式</p>
-        </header>
-        
+        <h1>TXT/M3U 转换工具</h1>
+
         <div class="upload-area" id="uploadArea">
-            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+            <div class="upload-icon">📁</div>
             <p class="upload-text">拖放文件到此处，或点击上传</p>
             <button class="btn btn-primary" id="uploadButton">
-                <i class="fas fa-folder-open"></i> 选择文件
+                选择文件
             </button>
             <input type="file" id="fileInput" class="file-input" accept=".txt,.m3u">
         </div>
-        
+
         <div class="panels-container">
             <div class="panel">
                 <div class="panel-header">
@@ -348,37 +68,43 @@
                 </div>
                 <textarea id="inputEditor" placeholder="输入内容将显示在这里..."></textarea>
             </div>
-            
+
             <div class="convert-container">
                 <button class="btn btn-success" id="convertBtn" disabled>
-                    <i class="fas fa-exchange-alt"></i> 转换格式
+                    转换格式
                 </button>
             </div>
-            
+
             <div class="panel">
                 <div class="panel-header">
                     <h3 class="panel-title">输出内容 <span class="format-badge" id="outputFormatBadge"></span></h3>
                 </div>
                 <textarea id="outputEditor" placeholder="输出内容将显示在这里..." readonly></textarea>
-                
+
                 <div class="button-group">
                     <button class="btn btn-primary" id="copyOutputBtn" disabled>
-                        <i class="fas fa-copy"></i> 复制结果
+                        复制结果
                     </button>
                     <button class="btn btn-success" id="downloadBtn" disabled>
-                        <i class="fas fa-download"></i> 下载输出
+                        下载输出
                     </button>
                     <button class="btn btn-danger" id="clearAllBtn">
-                        <i class="fas fa-trash"></i> 清除全部
+                        清除全部
                     </button>
                 </div>
             </div>
         </div>
     </div>
-    
-    <footer>
-        <p>TXT/M3U 转换工具 © 2025</p>
-    </footer>
+
+    <!-- 底部链接 -->
+    <div class="footer-links">
+        <a onclick="window.open('https://link3.cc/gyjune')">我的工具箱</a>
+        <a onclick="alert('邮箱：gyjune@126.com')">我的邮箱</a>
+        <a onclick="window.open('https://weibo.com/u/1771411553')">我的微博</a>
+        <a href="./1.html">格式转换</a>
+        <a href="./zby.html">直播源生成工具</a>
+    </div>
+    <div class="copyright">Copyright © 2025 多功能网站 | 版权所有</div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -393,79 +119,71 @@
             const clearAllBtn = document.getElementById('clearAllBtn');
             const inputFormatBadge = document.getElementById('inputFormatBadge');
             const outputFormatBadge = document.getElementById('outputFormatBadge');
-            
+
             let inputFormat = null;
             let outputFormat = null;
-            
-            // 上传按钮点击事件
+
             uploadButton.addEventListener('click', () => {
                 fileInput.click();
             });
-            
-            // 文件选择变化事件
+
             fileInput.addEventListener('change', handleFileSelect);
-            
-            // 拖放事件
+
             uploadArea.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 uploadArea.classList.add('dragover');
             });
-            
+
             uploadArea.addEventListener('dragleave', () => {
                 uploadArea.classList.remove('dragover');
             });
-            
+
             uploadArea.addEventListener('drop', (e) => {
                 e.preventDefault();
                 uploadArea.classList.remove('dragover');
-                
+
                 if (e.dataTransfer.files.length) {
                     handleFile(e.dataTransfer.files[0]);
                 }
             });
-            
-            // 输入内容变化事件
+
             inputEditor.addEventListener('input', () => {
                 detectInputFormat();
                 updateConvertButtonState();
             });
-            
-            // 处理文件选择
+
             function handleFileSelect(e) {
                 if (fileInput.files.length) {
                     handleFile(fileInput.files[0]);
                 }
             }
-            
-            // 处理文件 - 修复后的函数
+
             function handleFile(file) {
-                // 检查文件类型
                 const fileName = file.name.toLowerCase();
                 if (!fileName.endsWith('.txt') && !fileName.endsWith('.m3u')) {
                     alert('请上传TXT或M3U格式的文件');
                     return;
                 }
-                
+
                 const reader = new FileReader();
-                
+
                 reader.onload = (e) => {
                     const content = e.target.result;
                     inputEditor.value = content;
                     detectInputFormat();
                     updateConvertButtonState();
                 };
-                
+
                 reader.onerror = () => {
                     alert('读取文件时出错，请重试');
                 };
-                
+
                 reader.readAsText(file);
             }
-            
-            // 检测输入格式
+
             function detectInputFormat() {
                 const content = inputEditor.value.trim();
-                
+
                 if (content.includes('#EXTM3U')) {
                     inputFormat = 'm3u';
                     inputFormatBadge.textContent = 'M3U';
@@ -489,21 +207,19 @@
                     outputFormatBadge.className = 'format-badge';
                 }
             }
-            
-            // 更新转换按钮状态
+
             function updateConvertButtonState() {
                 convertBtn.disabled = !inputEditor.value.trim();
             }
-            
-            // 转换按钮点击事件
+
             convertBtn.addEventListener('click', () => {
                 const content = inputEditor.value.trim();
-                
+
                 if (!content) {
                     alert('请输入要转换的内容');
                     return;
                 }
-                
+
                 if (inputFormat === 'txt') {
                     outputEditor.value = convertTxtToM3u(content);
                     outputFormat = 'm3u';
@@ -515,25 +231,22 @@
                     outputFormatBadge.textContent = 'TXT';
                     outputFormatBadge.className = 'format-badge badge-txt';
                 }
-                
+
                 copyOutputBtn.disabled = false;
                 downloadBtn.disabled = false;
             });
-            
-            // 复制输出按钮点击事件
+
             copyOutputBtn.addEventListener('click', () => {
                 outputEditor.select();
                 document.execCommand('copy');
-                
-                // 显示简单的提示
+
                 const originalText = copyOutputBtn.innerHTML;
-                copyOutputBtn.innerHTML = '<i class="fas fa-check"></i> 已复制';
+                copyOutputBtn.innerHTML = '已复制';
                 setTimeout(() => {
-                    copyOutputBtn.innerHTML = '<i class="fas fa-copy"></i> 复制结果';
+                    copyOutputBtn.innerHTML = originalText;
                 }, 1500);
             });
-            
-            // 清除全部按钮点击事件
+
             clearAllBtn.addEventListener('click', () => {
                 inputEditor.value = '';
                 outputEditor.value = '';
@@ -546,82 +259,71 @@
                 convertBtn.disabled = true;
                 copyOutputBtn.disabled = true;
                 downloadBtn.disabled = true;
-                fileInput.value = ''; // 清除文件输入
+                fileInput.value = '';
             });
-            
-            // 下载按钮点击事件
+
             downloadBtn.addEventListener('click', () => {
                 const content = outputEditor.value;
                 if (!content) {
                     alert('没有内容可下载');
                     return;
                 }
-                
+
                 const blob = new Blob([content], { type: 'text/plain' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
-                
+
                 const extension = outputFormat === 'txt' ? '.txt' : '.m3u';
                 a.href = url;
                 a.download = `live${extension}`;
                 a.click();
-                
+
                 URL.revokeObjectURL(url);
             });
-            
-            // 转换逻辑：TXT 转 M3U (更新版)
+
             function convertTxtToM3u(txtContent) {
                 const lines = txtContent.split('\n');
                 let m3uContent = '#EXTM3U x-tvg-url="https://gitee.com/taksssss/tv/raw/main/epg/51zmt.xml.gz"\n';
                 let currentGroup = '';
-                
+
                 for (const line of lines) {
                     const trimmedLine = line.trim();
-                    
+
                     if (!trimmedLine) continue;
-                    
-                    // 检测分组行
+
                     if (trimmedLine.endsWith(',#genre#')) {
                         currentGroup = trimmedLine.replace(',#genre#', '');
                         continue;
                     }
-                    
-                    // 处理频道行
+
                     if (trimmedLine.includes(',')) {
                         const [name, url] = trimmedLine.split(',');
                         if (name && url) {
-                            // 生成频道ID (移除可能存在的特殊字符)
                             const channelId = name.trim().replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '');
-                            
-                            // 修改了logo URL前缀
                             m3uContent += `#EXTINF:-1,tvg-id="${channelId}" tvg-name="${name.trim()}" tvg-logo="https://gitee.com/gyjune/logo/raw/master/${channelId}.png" group-title="${currentGroup}",${name.trim()}\n`;
                             m3uContent += `${url.trim()}\n`;
                         }
                     }
                 }
-                
+
                 return m3uContent;
             }
-            
-            // 转换逻辑：M3U 转 TXT (更新版)
+
             function convertM3uToTxt(m3uContent) {
                 const lines = m3uContent.split('\n');
                 let txtContent = '';
                 let currentGroup = '';
-                
+
                 for (let i = 0; i < lines.length; i++) {
                     const line = lines[i].trim();
-                    
+
                     if (!line) continue;
-                    
-                    // 检测EXTM3U头
+
                     if (line.startsWith('#EXTM3U')) {
                         continue;
                     }
-                    
-                    // 检测EXTINF行
+
                     if (line.startsWith('#EXTINF:')) {
-                        // 提取分组信息
                         const groupMatch = line.match(/group-title="([^"]*)"/);
                         if (groupMatch && groupMatch[1]) {
                             if (groupMatch[1] !== currentGroup) {
@@ -629,27 +331,26 @@
                                 txtContent += `${currentGroup},#genre#\n`;
                             }
                         }
-                        
-                        // 提取频道名称
+
                         const nameMatch = line.match(/,(.*)$/);
                         if (nameMatch && nameMatch[1]) {
                             const channelName = nameMatch[1].trim();
-                            
-                            // 获取URL（下一行）
+
                             if (i + 1 < lines.length) {
                                 const urlLine = lines[i + 1].trim();
                                 if (urlLine && !urlLine.startsWith('#')) {
                                     txtContent += `${channelName},${urlLine}\n`;
-                                    i++; // 跳过URL行
+                                    i++;
                                 }
                             }
                         }
                     }
                 }
-                
+
                 return txtContent;
             }
         });
     </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"version":"2024.11.0","token":"8f5203b7cd924fb88461bca389c3ff9d","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
